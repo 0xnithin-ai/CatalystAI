@@ -1,0 +1,92 @@
+[
+  {
+    "id": "cat_1",
+    "smiles": "CC(=O)O",
+    "predicted_activity": 85.5,
+    "predicted_selectivity": 92.1,
+    "predicted_stability": 75.0,
+    "epistemic_variance": 0.5,
+    "source": "generated"
+  },
+  {
+    "id": "cat_2",
+    "smiles": "CCO",
+    "predicted_activity": 60.2,
+    "predicted_selectivity": 55.4,
+    "predicted_stability": 90.0,
+    "epistemic_variance": 0.2,
+    "source": "retrieved"
+  },
+  {
+    "id": "cat_3",
+    "smiles": "CC(C)O",
+    "predicted_activity": 45.0,
+    "predicted_selectivity": 88.0,
+    "predicted_stability": 60.0,
+    "epistemic_variance": 1.5,
+    "source": "generated"
+  },
+  {
+    "id": "cat_4",
+    "smiles": "C1=CC=CC=C1",
+    "predicted_activity": 90.0,
+    "predicted_selectivity": 40.0,
+    "predicted_stability": 95.0,
+    "epistemic_variance": 0.1,
+    "source": "retrieved"
+  },
+  {
+    "id": "cat_5",
+    "smiles": "C1=CC=C(C=C1)O",
+    "predicted_activity": 70.0,
+    "predicted_selectivity": 70.0,
+    "predicted_stability": 80.0,
+    "epistemic_variance": 0.8,
+    "source": "generated"
+  },
+  {
+    "id": "cat_6",
+    "smiles": "CCCCO",
+    "predicted_activity": 55.0,
+    "predicted_selectivity": 65.0,
+    "predicted_stability": 85.0,
+    "epistemic_variance": 2.0,
+    "source": "generated"
+  },
+  {
+    "id": "cat_7",
+    "smiles": "CC(=O)CC(=O)C",
+    "predicted_activity": 92.0,
+    "predicted_selectivity": 95.0,
+    "predicted_stability": 50.0,
+    "epistemic_variance": 3.5,
+    "source": "generated"
+  },
+  {
+    "id": "cat_8",
+    "smiles": "C1CCCCC1",
+    "predicted_activity": 40.0,
+    "predicted_selectivity": 50.0,
+    "predicted_stability": 99.0,
+    "epistemic_variance": 0.05,
+    "source": "retrieved"
+  },
+  {
+    "id": "cat_9",
+    "smiles": "C1=CC=C(C=C1)C=O",
+    "predicted_activity": 88.0,
+    "predicted_selectivity": 82.0,
+    "predicted_stability": 65.0,
+    "epistemic_variance": 1.2,
+    "source": "generated"
+  },
+  {
+    "id": "cat_10",
+    "smiles": "C1=CC=C(C=C1)C(=O)O",
+    "predicted_activity": 75.0,
+    "predicted_selectivity": 80.0,
+    "predicted_stability": 70.0,
+    "epistemic_variance": 0.9,
+    "source": "retrieved"
+  }
+]

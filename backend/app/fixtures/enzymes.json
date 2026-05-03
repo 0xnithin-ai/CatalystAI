@@ -1,0 +1,92 @@
+[
+  {
+    "id": "enz_1",
+    "smiles": "MKTLLLTLVVVTIVCLDLGY",
+    "predicted_activity": 80.0,
+    "predicted_selectivity": 90.0,
+    "predicted_stability": 60.0,
+    "epistemic_variance": 1.2,
+    "source": "generated"
+  },
+  {
+    "id": "enz_2",
+    "smiles": "MVLSPADKTNVKAAWGKVGA",
+    "predicted_activity": 65.0,
+    "predicted_selectivity": 70.0,
+    "predicted_stability": 85.0,
+    "epistemic_variance": 0.5,
+    "source": "retrieved"
+  },
+  {
+    "id": "enz_3",
+    "smiles": "MTEYKLVVVGAGGVGKSALT",
+    "predicted_activity": 95.0,
+    "predicted_selectivity": 85.0,
+    "predicted_stability": 55.0,
+    "epistemic_variance": 2.5,
+    "source": "generated"
+  },
+  {
+    "id": "enz_4",
+    "smiles": "MDFPQQLEACIKKIEAEEQK",
+    "predicted_activity": 50.0,
+    "predicted_selectivity": 60.0,
+    "predicted_stability": 95.0,
+    "epistemic_variance": 0.3,
+    "source": "retrieved"
+  },
+  {
+    "id": "enz_5",
+    "smiles": "MGLSDGEWQLVLNVWGKVEA",
+    "predicted_activity": 72.0,
+    "predicted_selectivity": 75.0,
+    "predicted_stability": 80.0,
+    "epistemic_variance": 1.0,
+    "source": "generated"
+  },
+  {
+    "id": "enz_6",
+    "smiles": "MADQLTEEQIAEFKEAFSLF",
+    "predicted_activity": 88.0,
+    "predicted_selectivity": 82.0,
+    "predicted_stability": 70.0,
+    "epistemic_variance": 1.8,
+    "source": "generated"
+  },
+  {
+    "id": "enz_7",
+    "smiles": "MSDVAIVKEGWLHKIGPQGQ",
+    "predicted_activity": 45.0,
+    "predicted_selectivity": 55.0,
+    "predicted_stability": 90.0,
+    "epistemic_variance": 0.4,
+    "source": "retrieved"
+  },
+  {
+    "id": "enz_8",
+    "smiles": "MEEKKIVKQKIRAELEAMQ",
+    "predicted_activity": 92.0,
+    "predicted_selectivity": 95.0,
+    "predicted_stability": 65.0,
+    "epistemic_variance": 3.0,
+    "source": "generated"
+  },
+  {
+    "id": "enz_9",
+    "smiles": "MLDQQTINIIKATVPVLKE",
+    "predicted_activity": 60.0,
+    "predicted_selectivity": 65.0,
+    "predicted_stability": 88.0,
+    "epistemic_variance": 0.8,
+    "source": "retrieved"
+  },
+  {
+    "id": "enz_10",
+    "smiles": "MAVKEGWLHKIGPQGQTLL",
+    "predicted_activity": 78.0,
+    "predicted_selectivity": 80.0,
+    "predicted_stability": 75.0,
+    "epistemic_variance": 1.5,
+    "source": "generated"
+  }
+]
