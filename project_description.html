@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CatalystAI — Molecular Discovery Platform</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap');
+
+  :root {
+    --ink: #0e0e0e;
+    --ink-muted: #555;
+    --ink-faint: #999;
+    --surface: #f7f5f0;
+    --surface-card: #ffffff;
+    --surface-accent: #edf2ff;
+    --accent: #1a56f5;
+    --accent-mid: #3b6de8;
+    --accent-faint: #e0e8ff;
+    --green: #0a6640;
+    --green-bg: #eaf5ee;
+    --amber: #7a4b00;
+    --amber-bg: #fff7e0;
+    --coral: #b23a1b;
+    --coral-bg: #fef0eb;
+    --teal: #0d5c5c;
+    --teal-bg: #e6f5f5;
+    --border: #e0ddd6;
+    --border-strong: #c9c5bc;
+    --rule: 1px solid var(--border);
+    --serif: 'DM Serif Display', Georgia, serif;
+    --sans: 'Instrument Sans', system-ui, sans-serif;
+    --mono: 'DM Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 64px 40px 120px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 32px;
+    margin-bottom: 48px;
+  }
+
+  .header-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 16px;
+  }
+
+  .header h1 {
+    font-family: var(--serif);
+    font-size: 52px;
+    line-height: 1.1;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  .header h1 em {
+    color: var(--accent);
+    font-style: italic;
+  }
+
+  .header-sub {
+    font-size: 18px;
+    color: var(--ink-muted);
+    max-width: 620px;
+    margin-top: 12px;
+    line-height: 1.5;
+  }
+
+  .header-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  .tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: var(--rule);
+    background: var(--surface-card);
+    color: var(--ink-muted);
+  }
+
+  .tag.accent { background: var(--accent-faint); border-color: #b8c8fc; color: var(--accent); }
+  .tag.green  { background: var(--green-bg);     border-color: #a3d9b5; color: var(--green); }
+  .tag.amber  { background: var(--amber-bg);     border-color: #f0d8a0; color: var(--amber); }
+
+  /* ── SECTION ── */
+  section { margin-bottom: 52px; }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  h2 {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 10px;
+    margin-top: 28px;
+  }
+
+  p { margin-bottom: 14px; color: #2a2a2a; }
+  p:last-child { margin-bottom: 0; }
+
+  strong { font-weight: 600; color: var(--ink); }
+
+  /* ── CALLOUT BOX ── */
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-faint);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: #1e2a5e;
+  }
+
+  .callout.green { border-color: var(--green); background: var(--green-bg); color: #0a3320; }
+  .callout.amber { border-color: #c98000; background: var(--amber-bg); color: var(--amber); }
+  .callout.coral { border-color: var(--coral); background: var(--coral-bg); color: #6b1f0d; }
+
+  /* ── CARDS GRID ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+  }
+
+  .card {
+    background: var(--surface-card);
+    border: var(--rule);
+    border-radius: 10px;
+    padding: 20px 22px;
+  }
+
+  .card-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card-icon.blue   { background: var(--accent-faint); }
+  .card-icon.green  { background: var(--green-bg); }
+  .card-icon.amber  { background: var(--amber-bg); }
+  .card-icon.teal   { background: var(--teal-bg); }
+  .card-icon.coral  { background: var(--coral-bg); }
+
+  .card h4 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    letter-spacing: 0.01em;
+  }
+
+  .card p {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink-muted);
+    margin: 0;
+  }
+
+  /* ── FLOW DIAGRAM (ASCII-style boxes) ── */
+  .flow {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin: 24px 0;
+    overflow-x: auto;
+  }
+
+  .flow-step {
+    flex: 1;
+    min-width: 110px;
+    background: var(--surface-card);
+    border: var(--rule);
+    border-right: none;
+    padding: 14px 14px;
+    text-align: center;
+    position: relative;
+  }
+
+  .flow-step:last-child { border-right: var(--rule); border-radius: 0 8px 8px 0; }
+  .flow-step:first-child { border-radius: 8px 0 0 8px; }
+
+  .flow-step::after {
+    content: '→';
+    position: absolute;
+    right: -11px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: var(--ink-faint);
+    z-index: 1;
+    background: var(--surface);
+    padding: 2px 0;
+  }
+
+  .flow-step:last-child::after { display: none; }
+
+  .flow-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-faint);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .flow-label {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--ink);
+  }
+
+  .flow-step.highlight {
+    background: var(--accent-faint);
+    border-color: #b8c8fc;
+  }
+
+  .flow-step.highlight .flow-label { color: var(--accent); }
+
+  /* ── TABLE ── */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    margin: 20px 0;
+  }
+
+  .data-table th {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1.5px solid var(--border-strong);
+  }
+
+  .data-table td {
+    padding: 10px 12px;
+    border-bottom: var(--rule);
+    color: #2a2a2a;
+    vertical-align: top;
+  }
+
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tbody tr:hover td { background: var(--surface); }
+
+  .pill {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    padding: 2px 8px;
+    border-radius: 100px;
+    letter-spacing: 0.04em;
+  }
+
+  .pill.blue  { background: var(--accent-faint); color: var(--accent-mid); }
+  .pill.green { background: var(--green-bg); color: var(--green); }
+  .pill.amber { background: var(--amber-bg); color: var(--amber); }
+  .pill.coral { background: var(--coral-bg); color: var(--coral); }
+  .pill.teal  { background: var(--teal-bg); color: var(--teal); }
+
+  /* ── ARCHITECTURE LAYERS ── */
+  .arch-stack {
+    border: var(--rule);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 20px 0;
+  }
+
+  .arch-layer {
+    padding: 14px 20px;
+    border-bottom: var(--rule);
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .arch-layer:last-child { border-bottom: none; }
+
+  .arch-layer-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    min-width: 110px;
+    padding-top: 2px;
+    color: var(--ink-faint);
+  }
+
+  .arch-layer-content {
+    flex: 1;
+    font-size: 13.5px;
+    color: #2a2a2a;
+  }
+
+  .arch-layer-content strong { color: var(--ink); font-size: 13.5px; }
+
+  .arch-layer.l1 { background: #f0f4ff; }
+  .arch-layer.l2 { background: #f5f9f0; }
+  .arch-layer.l3 { background: #fffbf0; }
+  .arch-layer.l4 { background: #f0f9f9; }
+  .arch-layer.l5 { background: var(--coral-bg); }
+  .arch-layer.l6 { background: var(--surface-card); }
+
+  /* ── ROADMAP ── */
+  .roadmap {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 20px 0;
+  }
+
+  .roadmap-phase {
+    border: var(--rule);
+    border-radius: 10px;
+    background: var(--surface-card);
+    overflow: hidden;
+  }
+
+  .roadmap-header {
+    padding: 12px 16px;
+    border-bottom: var(--rule);
+    background: var(--surface);
+  }
+
+  .roadmap-header .phase-name {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    margin-bottom: 2px;
+  }
+
+  .roadmap-header .phase-title {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .roadmap-header .phase-time {
+    font-size: 11.5px;
+    color: var(--ink-muted);
+    margin-top: 2px;
+  }
+
+  .roadmap-items {
+    padding: 12px 16px;
+    list-style: none;
+  }
+
+  .roadmap-items li {
+    font-size: 12.5px;
+    color: #2a2a2a;
+    padding: 4px 0;
+    padding-left: 14px;
+    position: relative;
+    line-height: 1.5;
+  }
+
+  .roadmap-items li::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    color: var(--ink-faint);
+    font-weight: 700;
+  }
+
+  /* ── DIVIDER ── */
+  hr {
+    border: none;
+    border-top: var(--rule);
+    margin: 40px 0;
+  }
+
+  /* ── QUOTE BLOCK ── */
+  blockquote {
+    border-left: 3px solid var(--border-strong);
+    padding: 12px 20px;
+    margin: 20px 0;
+    color: var(--ink-muted);
+    font-style: italic;
+    font-size: 15px;
+  }
+
+  /* ── TEAM BOX ── */
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .team-card {
+    border: var(--rule);
+    border-radius: 8px;
+    padding: 14px 16px;
+    background: var(--surface-card);
+  }
+
+  .team-role {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    margin-bottom: 4px;
+  }
+
+  .team-title { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .team-desc  { font-size: 12px; color: var(--ink-muted); margin-top: 4px; line-height: 1.45; }
+
+  @media (max-width: 600px) {
+    .page { padding: 36px 20px 80px; }
+    .header h1 { font-size: 38px; }
+    .roadmap { grid-template-columns: 1fr; }
+    .flow { flex-wrap: wrap; }
+    .flow-step { border-right: var(--rule); border-radius: 8px; }
+    .flow-step::after { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="header">
+    <p class="header-eyebrow">GPS Renewables · Molecular Discovery Hackathon · 2025</p>
+    <h1>Catalyst<em>AI</em></h1>
+    <p class="header-sub">An AI-powered platform for de novo catalyst and enzyme discovery — replacing trial-and-error with a continuous, self-improving Lab-in-the-Loop.</p>
+    <div class="header-tags">
+      <span class="tag accent">Direction 1 + 2</span>
+      <span class="tag green">Chemical Catalysis</span>
+      <span class="tag green">Synthetic Biology</span>
+      <span class="tag amber">Active Learning</span>
+      <span class="tag">Generative AI</span>
+      <span class="tag">Bayesian Optimisation</span>
+      <span class="tag">Flux Balance Analysis</span>
+    </div>
+  </header>
+
+
+  <!-- SECTION 1: THE PROBLEM -->
+  <section>
+    <p class="section-label">01 — Problem understanding</p>
+    <h2>The trial-and-error bottleneck is costing years and millions</h2>
+
+    <p>The global push toward sustainable aviation fuel, green methanol, and bio-based chemicals is fundamentally constrained by a discovery problem. The theoretical design space for novel molecules exceeds 10<sup>60</sup> candidates. Real laboratories can screen perhaps a few hundred a month. The gap between these two numbers is where competitive advantage lives — or dies.</p>
+
+    <p>For GPS Renewables' NG SAF initiative — India's first commercial-scale Ethanol-to-Jet plant — this is not an abstract concern. Every percentage point of improvement in the oligomerisation catalyst's selectivity translates directly to unit economics at scale. Every week saved in finding a more thermostable cellulase enzyme shortens the timeline to commercial lignocellulosic ethanol.</p>
+
+    <div class="callout">
+      <strong>The core constraint is not bench capacity — it is iteration intelligence.</strong> Traditional screening consumes resources on uninformed candidates. The winning approach is to make every experiment count, ensuring each wet-lab result maximally updates the system's knowledge about the unexplored design space.
+    </div>
+
+    <h3>Two distinct but interconnected challenges</h3>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon blue">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" fill="#1a56f5"/><rect x="9" y="2" width="5" height="5" rx="1" fill="#7fa8fc"/><rect x="2" y="9" width="5" height="5" rx="1" fill="#7fa8fc"/><rect x="9" y="9" width="5" height="5" rx="1" fill="#1a56f5"/></svg>
+        </div>
+        <h4>Chemical catalysis</h4>
+        <p>Identifying heterogeneous catalysts for CO₂ → methanol, syngas → ethanol, and ethanol → SAF requires navigating a brutal activity/selectivity trade-off. High temperatures activate CO₂ but promote the reverse water-gas shift reaction. No existing database lookup resolves this — it requires generative design in unexplored compositional space.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon green">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5" stroke="#0a6640" stroke-width="1.5" fill="none"/><path d="M5 8 Q8 4 11 8 Q8 12 5 8Z" fill="#0a6640" opacity="0.4"/><circle cx="8" cy="8" r="1.5" fill="#0a6640"/></svg>
+        </div>
+        <h4>Synthetic biology</h4>
+        <p>Engineering microbial cell factories to convert lignocellulosic paddy straw into ethanol requires synergistic enzyme cocktails and rebalanced metabolic flux. A single enzyme insert alters the entire intracellular network — without stoichiometric modelling, this yields toxic intermediate accumulation and stunted product titres.</p>
+      </div>
+    </div>
+
+    <div class="callout amber">
+      <strong>GPS Renewables' specific context:</strong> The HEFA pathway — dominant globally for SAF — is not scalable in India. Used cooking oil collection infrastructure is fragmented; imports face regulatory caps. The indigenous alternative is second-generation lignocellulosic ethanol → jet fuel. Our platform targets exactly this pathway: from biomass degradation enzymes to oligomerisation catalyst optimisation.
+    </div>
+  </section>
+
+
+  <!-- SECTION 2: SOLUTION OVERVIEW -->
+  <section>
+    <p class="section-label">02 — Solution overview</p>
+    <h2>CatalystAI: from database search to continuous generative discovery</h2>
+
+    <p>CatalystAI is not a search engine for molecules. It is a closed-loop discovery engine that generates novel candidates, predicts their performance, recommends experiments, and learns from every result — successful or not. The system explicitly treats wet-lab experiments as information-gathering exercises guided by Bayesian acquisition functions, not validation tasks.</p>
+
+    <div class="flow">
+      <div class="flow-step">
+        <span class="flow-num">01</span>
+        <span class="flow-label">Target definition</span>
+      </div>
+      <div class="flow-step highlight">
+        <span class="flow-num">02</span>
+        <span class="flow-label">DB retrieval + baseline</span>
+      </div>
+      <div class="flow-step highlight">
+        <span class="flow-num">03</span>
+        <span class="flow-label">Generative AI design</span>
+      </div>
+      <div class="flow-step highlight">
+        <span class="flow-num">04</span>
+        <span class="flow-label">Predictive ranking</span>
+      </div>
+      <div class="flow-step">
+        <span class="flow-num">05</span>
+        <span class="flow-label">Visualise + export</span>
+      </div>
+      <div class="flow-step">
+        <span class="flow-num">06</span>
+        <span class="flow-label">Wet-lab testing</span>
+      </div>
+      <div class="flow-step highlight">
+        <span class="flow-num">07</span>
+        <span class="flow-label">Log results + retrain</span>
+      </div>
+    </div>
+
+    <p>The highlighted steps represent CatalystAI's core differentiation: generating novel IP beyond database retrieval, ranking via physics-informed ML, and closing the loop with empirical data. Steps 1, 5, and 6 are the researcher's domain; steps 2, 3, 4, and 7 are where the platform creates compounding value with every iteration.</p>
+  </section>
+
+
+  <!-- SECTION 3: AI/ML ARCHITECTURE -->
+  <section>
+    <p class="section-label">03 — AI / ML approach</p>
+    <h2>Four algorithmic layers, one coherent pipeline</h2>
+
+    <p>The platform integrates four complementary ML paradigms in a cascaded pipeline. Each layer is purpose-built for its role; no single approach is asked to do more than it does well.</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Layer</th>
+          <th>Method</th>
+          <th>Role in pipeline</th>
+          <th>Key models</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="pill teal">Retrieval</span></td>
+          <td>RAG + vector search</td>
+          <td>Ground baseline performance; extract kinetics from literature</td>
+          <td>Milvus / Qdrant, domain LLM</td>
+        </tr>
+        <tr>
+          <td><span class="pill blue">Generation</span></td>
+          <td>Diffusion models</td>
+          <td>Propose novel crystal lattices and enzyme backbones</td>
+          <td>DiffCSP, cond. cDVAE, RFdiffusion</td>
+        </tr>
+        <tr>
+          <td><span class="pill amber">Prediction</span></td>
+          <td>Equivariant GNNs</td>
+          <td>Rapid surrogate for adsorption energies, stability, activity</td>
+          <td>PyTorch Geometric, GNoME-style</td>
+        </tr>
+        <tr>
+          <td><span class="pill green">Biology</span></td>
+          <td>Protein LMs + FBA</td>
+          <td>Sequence design, mutation fitness, metabolic flux</td>
+          <td>ESM3, ProteinMPNN, COBRApy</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Why generative models, not just retrieval-augmented generation</h3>
+
+    <p>RAG is excellent at extracting and synthesising known information. It cannot propose a catalyst composition that has never been synthesised, or a protein sequence that has never existed in nature. The platform's generative core — diffusion models operating in latent material and sequence space — is what makes it capable of producing novel intellectual property rather than recombining existing knowledge.</p>
+
+    <p>Specifically: <strong>DiffCSP</strong> generates stable crystal lattice geometries conditioned on target electronic properties; <strong>RFdiffusion</strong> generates enzyme backbone scaffolds tailored to specific substrate geometries; <strong>ProteinMPNN</strong> then maps these scaffolds to viable amino acid sequences. The output is structurally novel, thermodynamically plausible, and immediately actionable.</p>
+
+    <div class="callout">
+      <strong>Bayesian acquisition functions are not optional.</strong> The difference between a discovery tool and a discovery platform is how it handles uncertainty. CatalystAI outputs both a predicted mean performance value and an associated epistemic variance for every candidate. The Expected Improvement acquisition function then ranks candidates not by predicted score alone, but by their information value — explicitly balancing exploitation of confident predictions against exploration of uncertain but potentially high-value regions.
+    </div>
+
+    <h3>Metabolic pathway design</h3>
+
+    <p>For the synthetic biology track, Flux Balance Analysis via COBRApy provides genome-scale constraint-based modelling of the microbial host. The platform formulates the metabolic network as a stoichiometric matrix and solves it using mixed-integer linear programming to identify the gene knockout and heterologous pathway insertion strategy that maximises target product yield. Deep learning surrogates accelerate gap-filling — automatically identifying missing enzymatic reactions and proposing candidate insertions from KEGG and BiGG databases.</p>
+  </section>
+
+
+  <!-- SECTION 4: SYSTEM ARCHITECTURE -->
+  <section>
+    <p class="section-label">04 — System architecture</p>
+    <h2>Modular, cloud-native, and laboratory-integrable</h2>
+
+    <div class="arch-stack">
+      <div class="arch-layer l1">
+        <div class="arch-layer-label">UI Layer</div>
+        <div class="arch-layer-content">
+          <strong>Streamlit (hackathon) → Next.js (production)</strong> — Target definition workspace, candidate ranking panel, 3D molecular viewer (Molstar React / WebGL), interactive Plotly Pareto fronts, Cytoscape.js metabolic flux diagrams, experiment logging kanban.
+        </div>
+      </div>
+      <div class="arch-layer l2">
+        <div class="arch-layer-label">API Layer</div>
+        <div class="arch-layer-content">
+          <strong>FastAPI (Python, async)</strong> — RESTful endpoints for all pipeline stages; JWT-based multi-tenant auth; role-based access control separating proprietary GPS process parameters from shared training data.
+        </div>
+      </div>
+      <div class="arch-layer l3">
+        <div class="arch-layer-label">Generation</div>
+        <div class="arch-layer-content">
+          <strong>Materials microservice:</strong> DiffCSP / conditional cDVAE for crystal lattice generation. <strong>Biology microservice:</strong> RFdiffusion backbone → ProteinMPNN sequence → ESM3 zero-shot fitness. Both served via NVIDIA Triton Inference Server for concurrent execution.
+        </div>
+      </div>
+      <div class="arch-layer l4">
+        <div class="arch-layer-label">Prediction</div>
+        <div class="arch-layer-content">
+          <strong>PyTorch Geometric GNNs</strong> for adsorption energy and stability prediction (trained on Open Catalyst Project, 260M+ DFT calculations). <strong>COBRApy + MILP</strong> for metabolic flux simulation. Physics-informed heuristic filters (RDKit valency checks) immediately downstream of generation — hallucinated chemistry is blocked before it reaches the researcher.
+        </div>
+      </div>
+      <div class="arch-layer l5">
+        <div class="arch-layer-label">Active Learning</div>
+        <div class="arch-layer-content">
+          <strong>Feedback loop controller</strong> — manages the design-make-test-analyse cycle asynchronously. Listens for eLabFTW / Labtools.AI webhook events, validates incoming experimental data (human-in-the-loop flag for anomalies), triggers localised transfer learning retraining, versions model artefacts immutably. Orchestrated via Apache Airflow DAGs.
+        </div>
+      </div>
+      <div class="arch-layer l6">
+        <div class="arch-layer-label">Data Layer</div>
+        <div class="arch-layer-content">
+          <strong>Vector DB (Milvus):</strong> molecular + protein embeddings for semantic similarity search. <strong>External APIs:</strong> Open Catalyst Project, Materials Project, BRENDA, Protein Data Bank, UniProt, KEGG, BiGG, ModelSEED. <strong>Literature agents:</strong> LLM-powered extraction of kinetic parameters from unstructured publications and patents → structured ingestion.
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- SECTION 5: DATA FEEDBACK LOOP -->
+  <section>
+    <p class="section-label">05 — Data feedback loops</p>
+    <h2>The Lab-in-the-Loop: how negative results become competitive advantage</h2>
+
+    <p>Most screening platforms discard failed experiments. CatalystAI treats them as first-class data. A candidate that underperforms its predicted activity is maximally informative: it reveals exactly where the surrogate model's structural representation is deficient.</p>
+
+    <h3>Mechanics of the active learning cycle</h3>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon blue">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#1a56f5" stroke-width="1.5" fill="none"/><path d="M8 5v3l2 2" stroke="#1a56f5" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <h4>1. Uncertainty-aware prediction</h4>
+        <p>GNN surrogate models output a predicted mean + epistemic variance per candidate, quantified via deep ensembles. This variance is not decorative — it drives candidate selection.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon amber">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 13 L8 3 L13 13 Z" stroke="#c98000" stroke-width="1.5" fill="none"/><line x1="8" y1="9" x2="8" y2="11" stroke="#c98000" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="12.5" r="0.75" fill="#c98000"/></svg>
+        </div>
+        <h4>2. Expected Improvement ranking</h4>
+        <p>Candidates are ranked not by predicted score but by Expected Improvement — the probability-weighted gain over the current best. This balances exploitation of known-good regions against exploration of high-uncertainty space.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon green">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8 L7 12 L13 4" stroke="#0a6640" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h4>3. Validated ingestion</h4>
+        <p>Experimental results enter via eLabFTW / Labtools.AI API. A human-in-the-loop validation step flags sensor anomalies and contamination events before data is committed to the training repository.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon teal">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 12 C4 8 8 4 12 4" stroke="#0d5c5c" stroke-width="1.5" fill="none"/><path d="M4 12 C8 12 12 8 12 4" stroke="#0d5c5c" stroke-width="1.5" fill="none" stroke-dasharray="2 2"/></svg>
+        </div>
+        <h4>4. Transfer learning retraining</h4>
+        <p>Localised fine-tuning adjusts model weights toward the specific assay conditions and reactor environment of GPS Renewables' lab. Immutable model artefacts are versioned after each cycle — full provenance, no silent degradation.</p>
+      </div>
+    </div>
+
+    <div class="callout green">
+      <strong>Data provenance and quality control:</strong> Every data point entering the training corpus is tagged with its source (published literature, internal assay, high-throughput screening), confidence tier, and ingestion timestamp. Conflicting literature data points are flagged for expert review rather than silently averaged. Proprietary GPS Renewables data is cryptographically isolated in a tenant-specific shard and never incorporated into public model weights.
+    </div>
+
+    <h3>Model drift safeguards</h3>
+
+    <p>After each retraining event, the updated model is benchmarked against a held-out validation set of historically confirmed experimental results before being promoted to production. If performance regresses on the validation set, the retraining is rolled back and the anomaly is surfaced to the platform administrator. This prevents gradual model drift from accumulating silently across dozens of feedback cycles.</p>
+  </section>
+
+
+  <!-- SECTION 6: VISUALISATION -->
+  <section>
+    <p class="section-label">06 — Scientific UX</p>
+    <h2>Visualisations designed around how researchers actually think</h2>
+
+    <p>The dashboard is not a generic data tool with molecular data loaded in. It is purpose-built around the cognitive workflow of a process chemist and a metabolic engineer — two very different mental models that the platform must serve simultaneously.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <h4>3D Pareto front explorer</h4>
+        <p>Plotly scatter plot mapping candidates across activity, selectivity, and stability axes simultaneously. Researchers drag-select frontier points representing optimal trade-offs. Novel AI-generated candidates are visually distinguished from database retrievals.</p>
+      </div>
+      <div class="card">
+        <h4>Molstar molecular viewer</h4>
+        <p>WebGL-accelerated 3D rendering of generated crystal lattices and protein folds. GNN-predicted saliency maps overlay atomic interaction hotspots as a colour-coded heatmap. Mutation impact predictions visualised directly on the 3D structure.</p>
+      </div>
+      <div class="card">
+        <h4>Metabolic flux map</h4>
+        <p>Cytoscape.js network diagram of the microbial host's metabolic pathways. Edge thickness encodes calculated FBA flux volumes. Bottleneck reactions and toxic intermediate accumulation zones are flagged with colour coding.</p>
+      </div>
+      <div class="card">
+        <h4>Experiment kanban + feedback tracker</h4>
+        <p>Candidates progress from computational recommendation → synthesis → wet-lab testing → result logging. Predicted vs actual performance discrepancies are surfaced automatically, with structural hypotheses flagged for follow-up.</p>
+      </div>
+    </div>
+
+    <blockquote>The platform must explain why it makes its recommendations. Structural saliency maps generated by GNN attention mechanisms highlight the specific atomic coordination environments driving activity predictions — empowering the scientist to reason about the AI's logic, not just trust its output.</blockquote>
+  </section>
+
+
+  <!-- SECTION 7: BIOSECURITY -->
+  <section>
+    <p class="section-label">07 — Safety and biosecurity</p>
+    <h2>Dual-use risk is non-negotiable: the TEVV framework</h2>
+
+    <p>The same protein language models that design efficient biomass-degrading enzymes are capable — without guardrails — of generating sequences with structural homology to known toxins or pathogenic agents. This is not a theoretical risk: published biosecurity benchmarks have demonstrated that frontier generative models can produce sequences with structural similarity to restricted agents like diphtheria toxin that evade standard synthesis screening software.</p>
+
+    <p>CatalystAI enforces a mandatory Testing, Evaluation, Validation and Verification (TEVV) layer:</p>
+
+    <div class="callout coral">
+      <strong>All generated biological sequences are automatically cross-referenced</strong> against databases of known virulence factors, toxins, and restricted pathogen sequence motifs using structural homology alignment before any candidate is surfaced to the researcher or exported to a synthesis provider. Any match above a configurable similarity threshold triggers automatic blocking, administrator alert, and permanent audit logging. This layer cannot be bypassed by any user role.
+    </div>
+
+    <p>Additionally, the platform implements role-based access controls distinguishing general discovery use from export-to-synthesis workflows, with the latter requiring elevated permissions and automatic compliance documentation.</p>
+  </section>
+
+
+  <!-- SECTION 8: TECH STACK -->
+  <section>
+    <p class="section-label">08 — Technology choices</p>
+    <h2>Justified selections, not defaults</h2>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Domain</th>
+          <th>Technology</th>
+          <th>Justification</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Backend API</td>
+          <td>FastAPI (Python)</td>
+          <td>Async performance; native compatibility with PyTorch/COBRApy scientific stack</td>
+        </tr>
+        <tr>
+          <td>Deep learning</td>
+          <td>PyTorch + PyTorch Geometric</td>
+          <td>Industry standard for equivariant GNN message-passing architectures</td>
+        </tr>
+        <tr>
+          <td>Model serving</td>
+          <td>NVIDIA Triton Inference Server</td>
+          <td>Required to concurrently serve diffusion and GNN models without latency bottlenecks</td>
+        </tr>
+        <tr>
+          <td>Vector database</td>
+          <td>Milvus</td>
+          <td>Sub-millisecond similarity search at scale; open-source with strong community</td>
+        </tr>
+        <tr>
+          <td>Cheminformatics</td>
+          <td>RDKit</td>
+          <td>Industry-standard valency validation, SMILES parsing, and steric clash detection</td>
+        </tr>
+        <tr>
+          <td>Metabolic modelling</td>
+          <td>COBRApy</td>
+          <td>Direct SBML / genome-scale model parsing; integrates natively with Python backend</td>
+        </tr>
+        <tr>
+          <td>Workflow orchestration</td>
+          <td>Apache Airflow</td>
+          <td>DAG-based management of multi-stage active learning cycles; robust retry/alerting</td>
+        </tr>
+        <tr>
+          <td>Frontend (demo)</td>
+          <td>Streamlit</td>
+          <td>Rapid scientific prototyping; seamless Python interop; Molstar component available</td>
+        </tr>
+        <tr>
+          <td>Frontend (production)</td>
+          <td>Next.js</td>
+          <td>Scalable multi-tenant SaaS architecture with granular RBAC requirements</td>
+        </tr>
+        <tr>
+          <td>Molecular visualisation</td>
+          <td>Molstar (molstar-react)</td>
+          <td>WebGL-accelerated; handles large macromolecular assemblies; used in PDB itself</td>
+        </tr>
+        <tr>
+          <td>Network visualisation</td>
+          <td>Cytoscape.js</td>
+          <td>Proven for metabolic network graphs; supports dynamic flux-weighted edge styling</td>
+        </tr>
+        <tr>
+          <td>ELN integration</td>
+          <td>eLabFTW API</td>
+          <td>Open-source; robust webhook support for feedback loop automation; self-hostable</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+
+  <!-- SECTION 9: ROADMAP -->
+  <section>
+    <p class="section-label">09 — Development roadmap</p>
+    <h2>What we demo, what we build, what we scale</h2>
+
+    <div class="roadmap">
+      <div class="roadmap-phase">
+        <div class="roadmap-header">
+          <div class="phase-name">Phase 1</div>
+          <div class="phase-title">Hackathon MVP</div>
+          <div class="phase-time">Days 1–3</div>
+        </div>
+        <ul class="roadmap-items">
+          <li>Streamlit dashboard with target reaction input</li>
+          <li>Cached diffusion model outputs (novel SAF catalyst designs)</li>
+          <li>Molstar 3D crystal lattice viewer</li>
+          <li>Plotly 3D Pareto front (activity vs selectivity vs stability)</li>
+          <li>Simulated Expected Improvement feedback loop</li>
+          <li>Mock ELN data ingestion + candidate re-ranking</li>
+        </ul>
+      </div>
+      <div class="roadmap-phase">
+        <div class="roadmap-header">
+          <div class="phase-name">Phase 2</div>
+          <div class="phase-title">GPS Pilot</div>
+          <div class="phase-time">Months 1–4</div>
+        </div>
+        <ul class="roadmap-items">
+          <li>Live GNN surrogate on Open Catalyst Project data</li>
+          <li>COBRApy FBA for paddy straw biomass pathway</li>
+          <li>eLabFTW integration for GPS lab data ingestion</li>
+          <li>First active learning retraining cycle</li>
+          <li>Multi-user collaboration + RBAC</li>
+          <li>Biosecurity TEVV screening layer</li>
+        </ul>
+      </div>
+      <div class="roadmap-phase">
+        <div class="roadmap-header">
+          <div class="phase-name">Phase 3</div>
+          <div class="phase-title">Production</div>
+          <div class="phase-time">Months 5–12</div>
+        </div>
+        <ul class="roadmap-items">
+          <li>Live DiffCSP / RFdiffusion on GPU cluster</li>
+          <li>ESM3 protein design pipeline</li>
+          <li>Robotic lab hardware API integration</li>
+          <li>Next.js enterprise frontend</li>
+          <li>Full audit trail + IP provenance system</li>
+          <li>Expansion to CO₂ → methanol and syngas tracks</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout green">
+      <strong>Pilot engagement commitment:</strong> Our team is committed to a longer-term development partnership with GPS Renewables. The hackathon MVP is designed specifically to be extended with GPS's proprietary catalyst screening data and biomass processing conditions. We have structured the architecture to isolate GPS's commercial data from open-source training corpora from day one, ensuring the pilot can proceed securely and compliantly.
+    </div>
+  </section>
+
+
+  <!-- SECTION 10: TEAM -->
+  <section>
+    <p class="section-label">10 — Team composition</p>
+    <h2>Domain expertise is foundational, not advisory</h2>
+
+    <p>Building a platform that scientists will actually trust requires scientists on the building team. Our composition reflects this conviction.</p>
+
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-role">Core team</div>
+        <div class="team-title">ML / Platform Engineer</div>
+        <div class="team-desc">GNN architecture, generative model pipeline, active learning framework, backend API</div>
+      </div>
+      <div class="team-card">
+        <div class="team-role">Core team</div>
+        <div class="team-title">Computational Chemist</div>
+        <div class="team-desc">DFT validation, catalyst descriptor selection, reaction pathway modelling, Open Catalyst Project data curation</div>
+      </div>
+      <div class="team-card">
+        <div class="team-role">Core team</div>
+        <div class="team-title">Biochemist / Synthetic Biologist</div>
+        <div class="team-desc">Enzyme engineering constraints, FBA model construction, KEGG/UniProt pathway curation, biosecurity TEVV design</div>
+      </div>
+      <div class="team-card">
+        <div class="team-role">Core team</div>
+        <div class="team-title">Frontend / UX Engineer</div>
+        <div class="team-desc">Streamlit → Next.js dashboard, Molstar integration, Plotly/Cytoscape visualisation, researcher UX testing</div>
+      </div>
+      <div class="team-card">
+        <div class="team-role">Advisor</div>
+        <div class="team-title">Chemical Process Engineer</div>
+        <div class="team-desc">Ethanol-to-jet process constraints, reactor operating conditions, commercial-scale feasibility review</div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- SECTION 11: RISKS -->
+  <section>
+    <p class="section-label">11 — Risks and mitigations</p>
+    <h2>Known failure modes, addressed in the architecture</h2>
+
+    <div class="card-grid">
+      <div class="card">
+        <h4>Hallucinated chemistry</h4>
+        <p>Diffusion models can generate structures violating basic valency rules or steric constraints. <strong>Mitigation:</strong> RDKit-based physics-informed heuristic filters run immediately downstream of every generation step. Invalid chemistry never reaches the prediction layer.</p>
+      </div>
+      <div class="card">
+        <h4>Out-of-distribution failure</h4>
+        <p>GNN surrogates trained on known catalysts degrade on truly novel compositions. <strong>Mitigation:</strong> Epistemic uncertainty quantification (deep ensembles) flags low-confidence predictions. Expected Predictive Information Gain prioritises experiments that resolve OOD uncertainty.</p>
+      </div>
+      <div class="card">
+        <h4>Noisy literature data</h4>
+        <p>Scraped kinetic parameters from publications frequently conflict. <strong>Mitigation:</strong> Automated conflict detection flags inconsistent values; human expert review is required before contested data enters training. GPS in-house data is heavily weighted over literature.</p>
+      </div>
+      <div class="card">
+        <h4>Model drift on retraining</h4>
+        <p>Incremental fine-tuning on small experimental batches can degrade performance on previously well-modelled chemical spaces. <strong>Mitigation:</strong> Held-out validation benchmark run before every model promotion. Automatic rollback if regression detected. Immutable artefact versioning.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <hr>
+
+  <section>
+    <p style="font-family: var(--mono); font-size: 12px; color: var(--ink-faint); text-align: center; line-height: 2;">
+      CatalystAI &nbsp;·&nbsp; AI-Powered Molecular Discovery Platform &nbsp;·&nbsp; GPS Renewables Hackathon 2025<br>
+      Covering Direction 1 (Chemical Catalysis) and Direction 2 (Synthetic Biology)
+    </p>
+  </section>
+
+</div>
+</body>
+</html>
