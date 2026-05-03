@@ -79,6 +79,15 @@ def rank_candidates_endpoint(req: RankRequest):
     ranked = rank_candidates(req.session_id)
     return {"candidates": ranked, "count": len(ranked)}
 
+@app.post("/api/rank-by-score")
+def rank_by_score_endpoint(req: RankRequest):
+    """Rank purely by predicted_activity — no Bayesian logic. Used for comparison."""
+    if req.session_id not in sessions_db:
+        raise HTTPException(status_code=404, detail="Session not found")
+    candidates = candidates_db.get(req.session_id, [])
+    ranked = sorted([c.model_dump() for c in candidates], key=lambda x: x["predicted_activity"], reverse=True)
+    return {"candidates": ranked, "count": len(ranked)}
+
 from app.schemas import Experiment
 from app.services.mock_db import experiments_db
 
@@ -104,9 +113,11 @@ def mock_eln_webhook(exp: Experiment):
     from app.services.bayesian_service import get_best_so_far
     new_best = get_best_so_far(session_id)
     
+    iteration = len(experiments_db.get(session_id, []))
     return {
-        "message": "Experiment logged successfully", 
-        "new_best_so_far": new_best
+        "message": "Experiment logged successfully",
+        "new_best_so_far": new_best,
+        "iteration": iteration
     }
 
 # Task 33: Seed Demo State
