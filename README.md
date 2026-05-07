@@ -1,6 +1,6 @@
 # CatalystAI — AI-Powered Molecular Discovery Platform
 
-**GPS Renewables Molecular Discovery Hackathon 2025**
+**AI FOR BHARAT  2026**
 
 An AI-powered platform for de novo catalyst and enzyme discovery — replacing trial-and-error with a continuous, self-improving Lab-in-the-Loop.
 
@@ -108,10 +108,10 @@ backend/
 │   ├── schemas.py                 # Pydantic models
 │   └── services/
 │       ├── bayesian_service.py    # Expected Improvement
-│       ├── acquisition_service.py  # Multi-acquisition functions ✅ NEW
-│       ├── rag_service.py          # Literature retrieval ✅ NEW
-│       ├── fba_service.py          # Metabolic modeling ✅ NEW
-│       ├── biosecurity_service.py  # TEVV screening ✅ NEW
+│       ├── acquisition_service.py  # Multi-acquisition functions 
+│       ├── rag_service.py          # Literature retrieval 
+│       ├── fba_service.py          # Metabolic modeling 
+│       ├── biosecurity_service.py  # TEVV screening
 │       └── mock_db.py             # In-memory storage
 └── requirements.txt
 ```
@@ -123,11 +123,11 @@ streamlit_app/
     ├── Generate & Rank
     ├── Pareto Front
     ├── Why EI? (Comparison)
-    ├── Multi-Acquisition Comparison  ✅ NEW
+    ├── Multi-Acquisition Comparison  
     ├── ELN Feedback Loop
-    ├── RAG Literature Retrieval      ✅ NEW
-    ├── Metabolic FBA (Enzyme Track)  ✅ NEW
-    └── Biosecurity TEVV              ✅ NEW
+    ├── RAG Literature Retrieval      
+    ├── Metabolic FBA (Enzyme Track)  
+    └── Biosecurity TEVV              
 ```
 
 ### Visualizations
@@ -222,8 +222,8 @@ streamlit run app.py --server.port=8501
 ## 🎯 Key Differentiators for Finals
 
 ### 1. **Breadth: Both Directions Covered**
-- Direction 1 (Chemical Catalysis): ✅ Generative design, GNN prediction, Bayesian optimization
-- Direction 2 (Synthetic Biology): ✅ FBA, enzyme engineering, metabolic pathway design
+- Direction 1 (Chemical Catalysis): Generative design, GNN prediction, Bayesian optimization
+- Direction 2 (Synthetic Biology): FBA, enzyme engineering, metabolic pathway design
 
 ### 2. **Depth: Technical Sophistication**
 - **5 acquisition functions** (not just EI)
@@ -265,35 +265,23 @@ streamlit run app.py --server.port=8501
 
 ---
 
-## 🏆 Why CatalystAI Wins
+##  Why CatalystAI is Best
 
-### For GPS Renewables
 - **Direct Impact:** Accelerates 2G Ethanol-to-SAF catalyst discovery
 - **Economic:** Reduces screening costs by prioritizing high-EI candidates
 - **Scalable:** Handles both catalyst and enzyme tracks (paddy straw pretreatment + conversion)
 
-### For the Hackathon
 - **Completeness:** Covers all 4 ML layers (Retrieval, Generation, Prediction, Biology)
 - **Innovation:** First to combine RAG + Bayesian BO + FBA + TEVV in one platform
 - **Explainability:** Side-by-side comparisons show *why* AI picks certain candidates
 - **Safety:** Only submission with biosecurity screening layer
 
-### Technical Maturity
 - **MVP → Production Path:** Clear architecture for scaling
 - **Scientific Validation:** Built on proven methods (DiffCSP, GNoME, COBRApy)
 - **Regulatory Awareness:** TEVV compliance from day one
 
 ---
 
-## 👥 Team & Commitment
-
-We commit to a **pilot engagement** with GPS Renewables:
-- Integrate proprietary catalyst screening data
-- Cryptographically isolate GPS data from public models
-- Extend to CO₂ → methanol and syngas tracks
-- Deploy on GPS lab infrastructure with eLabFTW integration
-
----
 
 ## 📚 References
 
@@ -321,18 +309,5 @@ We commit to a **pilot engagement** with GPS Renewables:
 
 ---
 
-## 📄 License
 
-[To be determined — likely Apache 2.0 for open-source core]
 
----
-
-## 📧 Contact
-
-[Team Contact Information]
-
----
-
-**CatalystAI** — From database search to continuous generative discovery.
-
-**Hackathon 2025 | GPS Renewables | India's 2G Ethanol-to-SAF Initiative**
