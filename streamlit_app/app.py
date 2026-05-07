@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import os
 
-API_URL = os.getenv("API_URL", "https://catalystai-1.onrender.com")
+API_URL = os.getenv("API_URL")
 
 st.set_page_config(
     page_title="CatalystAI Discovery Platform",
