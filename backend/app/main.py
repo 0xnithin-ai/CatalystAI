@@ -1,6 +1,7 @@
 import uuid
 import json
 import os
+from typing import Optional, List, Dict, Any
 from pydantic import BaseModel
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -119,6 +120,105 @@ def mock_eln_webhook(exp: Experiment):
         "new_best_so_far": new_best,
         "iteration": iteration
     }
+
+# ── NEW ENDPOINTS: RAG, FBA, Biosecurity, Advanced Acquisition ────────────────
+
+@app.get("/api/literature/search")
+def search_literature(query: str, target_type: str = "catalyst", top_k: int = 3):
+    """RAG-based literature retrieval"""
+    from app.services.rag_service import retrieve_similar_literature
+    results = retrieve_similar_literature(query, target_type, top_k)
+    return {"results": results, "count": len(results)}
+
+@app.get("/api/literature/baseline")
+def get_baseline_performance(reaction: str, target_type: str = "catalyst"):
+    """Extract baseline performance from literature"""
+    from app.services.rag_service import extract_baseline_performance
+    baseline = extract_baseline_performance(reaction, target_type)
+    return baseline
+
+@app.post("/api/fba/simulate")
+def simulate_flux_balance(
+    target_product: str = "Ethanol",
+    enzyme_modifications: Optional[List[Dict[str, Any]]] = None,
+    optimize_for: str = "product"
+):
+    """Simulate metabolic flux balance analysis"""
+    from app.services.fba_service import simulate_fba
+    result = simulate_fba(target_product, enzyme_modifications, optimize_for)
+    return result
+
+@app.post("/api/fba/enzyme-impact")
+def predict_enzyme_impact(
+    enzyme_id: str,
+    current_activity: float = 1.0,
+    proposed_activity: float = 1.5
+):
+    """Predict impact of enzyme engineering on pathway flux"""
+    from app.services.fba_service import predict_enzyme_impact
+    result = predict_enzyme_impact(enzyme_id, current_activity, proposed_activity)
+    return result
+
+@app.get("/api/fba/design-cocktail")
+def design_enzyme_cocktail(substrate: str = "lignocellulose", optimization_goal: str = "max_yield"):
+    """Design optimal enzyme cocktail"""
+    from app.services.fba_service import design_enzyme_cocktail
+    result = design_enzyme_cocktail(substrate, optimization_goal)
+    return result
+
+@app.post("/api/biosecurity/screen")
+def screen_biosecurity(sequence: str, sequence_id: str, enzyme_family: Optional[str] = None):
+    """Screen a single sequence against biosecurity databases"""
+    from app.services.biosecurity_service import screen_sequence
+    result = screen_sequence(sequence, sequence_id, enzyme_family)
+    return result
+
+class BatchScreenRequest(BaseModel):
+    session_id: str
+    target_type: str = "enzyme"
+
+@app.post("/api/biosecurity/batch-screen")
+def batch_screen_biosecurity(req: BatchScreenRequest):
+    """Batch screen all candidates in a session"""
+    if req.session_id not in sessions_db:
+        raise HTTPException(status_code=404, detail="Session not found")
+    
+    from app.services.biosecurity_service import batch_screen_candidates
+    candidates = [c.model_dump() for c in candidates_db.get(req.session_id, [])]
+    result = batch_screen_candidates(candidates, req.target_type)
+    return result
+
+@app.get("/api/biosecurity/compliance-report")
+def get_compliance_report():
+    """Get TEVV compliance report"""
+    from app.services.biosecurity_service import get_tevv_compliance_report
+    return get_tevv_compliance_report()
+
+class AcquisitionRankRequest(BaseModel):
+    session_id: str
+    function_name: str = "ei"  # ei, pi, ucb, ts, ei_per_cost, kg, ei_pareto
+    params: Optional[Dict[str, Any]] = None
+
+@app.post("/api/rank/acquisition")
+def rank_by_acquisition_function(req: AcquisitionRankRequest):
+    """Rank candidates using specified acquisition function"""
+    if req.session_id not in sessions_db:
+        raise HTTPException(status_code=404, detail="Session not found")
+    
+    from app.services.acquisition_service import rank_by_acquisition_function
+    params = req.params or {}
+    ranked = rank_by_acquisition_function(req.session_id, req.function_name, **params)
+    return {"candidates": ranked, "count": len(ranked), "function": req.function_name}
+
+@app.get("/api/rank/compare-acquisition")
+def compare_acquisition_functions_endpoint(session_id: str):
+    """Compare multiple acquisition functions side-by-side"""
+    if session_id not in sessions_db:
+        raise HTTPException(status_code=404, detail="Session not found")
+    
+    from app.services.acquisition_service import compare_acquisition_functions
+    comparison = compare_acquisition_functions(session_id)
+    return comparison
 
 # Task 33: Seed Demo State
 from app.schemas import Constraints
