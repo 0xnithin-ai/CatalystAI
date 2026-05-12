@@ -184,7 +184,7 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
 # Frontend (separate terminal)
 cd streamlit_app
-pip install streamlit requests pandas plotly streamlit-molstar
+pip install -r requirements.txt
 streamlit run app.py --server.port=8501
 ```
 
