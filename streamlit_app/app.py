@@ -5,6 +5,9 @@ import numpy as np
 import os
 
 API_URL = os.getenv("API_URL")
+if not API_URL and os.getenv("API_HOSTPORT"):
+    API_URL = f"http://{os.getenv('API_HOSTPORT')}"
+API_URL = (API_URL or "http://localhost:8000").rstrip("/")
 
 st.set_page_config(
     page_title="CatalystAI Discovery Platform",
@@ -695,8 +698,14 @@ if st.session_state["session_id"]:
             st.markdown("---")
             st.markdown("#### 3D Crystal Structure Viewer")
             st.info("Simulating DiffCSP output — zeolite-framework catalyst (PDB: 7S5B)")
-            from streamlit_molstar import st_molstar_rcsb
-            st_molstar_rcsb('7S5B')
+            try:
+                from streamlit_molstar import st_molstar_rcsb
+                st_molstar_rcsb('7S5B')
+            except ModuleNotFoundError:
+                st.warning(
+                    "3D viewer dependency is not installed. Redeploy with "
+                    "`streamlit_app/requirements.txt` or the root `requirements.txt`."
+                )
         else:
             st.info("Click 'Generate Candidates' or 'Load Demo' to begin")
     

@@ -3,4 +3,4 @@ requests
 pandas
 numpy
 plotly
-streamlit-molstar
+streamlit-molstar==0.4.21

@@ -188,6 +188,34 @@ pip install -r requirements.txt
 streamlit run app.py --server.port=8501
 ```
 
+### Deploy on Render
+
+The repository includes `render.yaml` for a two-service Render Blueprint:
+
+- `catalystai-backend`: FastAPI service from `backend/`
+- `catalystai-streamlit`: Streamlit service from `streamlit_app/`
+
+Create a new Render Blueprint from the repo root and Render will use the correct
+subdirectory requirements files, start commands, Python version, and health
+checks. If you create the services manually instead, use:
+
+```bash
+# Backend
+Root Directory: backend
+Build Command: pip install --upgrade pip && pip install -r requirements.txt
+Start Command: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+Health Check Path: /health
+
+# Streamlit
+Root Directory: streamlit_app
+Build Command: pip install --upgrade pip && pip install -r requirements.txt
+Start Command: streamlit run app.py --server.address 0.0.0.0 --server.port $PORT --server.headless true
+Health Check Path: /_stcore/health
+```
+
+For a manual Streamlit service, set `API_URL` to the backend URL. For Blueprint
+deploys, `API_HOSTPORT` is wired automatically through Render's private network.
+
 ---
 
 ## 📊 API Endpoints

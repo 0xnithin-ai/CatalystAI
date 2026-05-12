@@ -6,7 +6,7 @@ from app.services.mock_db import candidates_db, experiments_db
 def calculate_ei(mu: float, sigma: float, best_so_far: float) -> float:
     """
     Computes Expected Improvement (EI).
-    EI = (mu - best) * \Phi(Z) + sigma * \phi(Z)
+    EI = (mu - best) * Phi(Z) + sigma * phi(Z)
     """
     if sigma <= 0:
         return max(0.0, mu - best_so_far)

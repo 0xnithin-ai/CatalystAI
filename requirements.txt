@@ -1,0 +1,4 @@
+# Root fallback for Render services that build from the repository root.
+# The backend and Streamlit services also have their own requirements files.
+-r backend/requirements.txt
+-r streamlit_app/requirements.txt
